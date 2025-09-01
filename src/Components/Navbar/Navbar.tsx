@@ -14,7 +14,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 
 export default function AppNavbar() {
-  const [token, setToken] = useState(false);
+  const [token] = useState(false);
 
   return (
     <Navbar maxWidth="xl" className="bg-indigo-400 px-4 sm:px-6 lg:px-8">
