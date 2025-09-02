@@ -44,7 +44,9 @@ export default function AppNavbar() {
         }
       }).then(response => {
         setUserDetails(response.data.user)
-        setUserPhoto(`${response.data.user.photo}?t=${Date.now()}`);
+        setUserPhoto(`${response.data.user.photo}`);
+        console.log('Updated photo URL:', response.data.user.photo);
+        console.log("User Data:", response.data);
         return response?.data;
       }).finally(() => setLoading(false)), {
         pending: "Please Wait...",
@@ -59,19 +61,22 @@ export default function AppNavbar() {
 
 
   function handleImageUpload() {
-    if(inputUpload?.current?.files?.length) {
-      const file  = inputUpload?.current?.files[0];
-      setUserPhoto(`${URL.createObjectURL(file)}?t=${Date.now()}`);
-      const dataForm = new FormData();
-        
-      dataForm.append('photo', file);
-      axios.put(`https://linked-posts.routemisr.com/users/upload-photo`,dataForm, {
-        headers: {
-          token
-        }
-      }).then(() => getUserDetails())
-    }
+  if (inputUpload?.current?.files?.length) {
+    const file = inputUpload.current.files[0];
+    setUserPhoto(URL.createObjectURL(file)); // مؤقت لعرض الصورة
+
+    const dataForm = new FormData();
+    dataForm.append("photo", file);
+
+    axios.put("https://linked-posts.routemisr.com/users/upload-photo", dataForm, {
+      headers: { token }
+    })
+    .then(() => {
+      getUserDetails(); // هنا بنجيب الصورة الجديدة من السيرفر
+    })
+    .catch(err => console.error(err));
   }
+}
 
   
 
@@ -124,8 +129,8 @@ export default function AppNavbar() {
                 color="default"
                 name=""
                 size="sm"
-                src={userPhoto ? `${userPhoto}?t=${Date.now()}` : undefined}
-              />
+                src={userDetails?.photo || ''}
+                />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownItem
