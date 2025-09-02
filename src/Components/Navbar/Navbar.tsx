@@ -25,6 +25,7 @@ export default function AppNavbar() {
   const location = useLocation();
 
   const [userDetails, setUserDetails] = useState<User | null>(null);
+  const [userPhoto, setUserPhoto] = useState<string | null>(null);
 
   const inputUpload = useRef<HTMLInputElement | null >(null);
   
@@ -43,7 +44,7 @@ export default function AppNavbar() {
         }
       }).then(response => {
         setUserDetails(response?.data?.user);
-        console.log('hehrehjrgehr')
+        setUserPhoto(response.data.user.photo)
         return response?.data;
       }).finally(() => setLoading(false)), {
         pending: "Please Wait...",
@@ -58,10 +59,11 @@ export default function AppNavbar() {
 
 
   function handleImageUpload() {
-    setLoading(true);
     if(inputUpload?.current?.files?.length) {
       const file  = inputUpload?.current?.files[0];
+      setUserPhoto(URL.createObjectURL(file))
       const dataForm = new FormData();
+        
       dataForm.append('photo', file);
       axios.put(`https://linked-posts.routemisr.com/users/upload-photo`,dataForm, {
         headers: {
