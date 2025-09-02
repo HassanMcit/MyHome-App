@@ -44,7 +44,7 @@ export default function AppNavbar() {
         }
       }).then(response => {
         setUserDetails(response?.data?.user);
-        setUserPhoto(response.data.user.photo)
+        setUserPhoto(`${response.data.user.photo}?t=${Date.now()}`);
         return response?.data;
       }).finally(() => setLoading(false)), {
         pending: "Please Wait...",
@@ -61,7 +61,7 @@ export default function AppNavbar() {
   function handleImageUpload() {
     if(inputUpload?.current?.files?.length) {
       const file  = inputUpload?.current?.files[0];
-      setUserPhoto(URL.createObjectURL(file))
+      setUserPhoto(`${URL.createObjectURL(file)}?t=${Date.now()}`);
       const dataForm = new FormData();
         
       dataForm.append('photo', file);
@@ -124,7 +124,7 @@ export default function AppNavbar() {
                 color="default"
                 name=""
                 size="sm"
-                src={`${userPhoto}`}
+                src={`${userPhoto}?t=${Date.now()}`}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
