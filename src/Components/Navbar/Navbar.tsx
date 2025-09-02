@@ -43,7 +43,7 @@ export default function AppNavbar() {
           token
         }
       }).then(response => {
-        setUserDetails(response?.data?.user);
+        setUserPhoto(response.data.user.photo);
         setUserPhoto(`${response.data.user.photo}?t=${Date.now()}`);
         return response?.data;
       }).finally(() => setLoading(false)), {
@@ -124,7 +124,7 @@ export default function AppNavbar() {
                 color="default"
                 name=""
                 size="sm"
-                src={`${userPhoto}?t=${Date.now()}`}
+                src={userPhoto ? `${userPhoto}?t=${Date.now()}` : undefined}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
