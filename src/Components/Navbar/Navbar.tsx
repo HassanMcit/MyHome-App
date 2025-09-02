@@ -71,7 +71,7 @@ export default function AppNavbar() {
       }).then(() => {
         getUserDetails()
         setUpdateProfileImage(URL.createObjectURL(file))
-      }).catch(error => console.log(error)), {
+      }).catch(error => console.log(error)).finally(() => setLoading(false)), {
         pending: "Please Wait...",
         success: "Profile Changed Successful 🎉",
         error: "Please Try Again 😢"
