@@ -16,11 +16,10 @@ import axios, { type AxiosResponse } from "axios";
 import type { Root, User } from "../../Type";
 import useUserDataWithRouter from "../CustomeHook/useUserDataWithRouter/useUserDataWithRouter";
 import { toast } from "react-toastify";
-import Loading from "../Loading/Loading";
 
 export default function AppNavbar() {
 
-  const [{ token, setToken, loading, setLoading }, router] = useUserDataWithRouter();
+  const [{ token, setToken }, router] = useUserDataWithRouter();
 
   const [userDetails, setUserDetails] = useState<User | null>(null);
 
@@ -43,7 +42,7 @@ export default function AppNavbar() {
       })
       .then(function ({ data: { user } }: AxiosResponse<Root>) {
         setUserDetails(user);
-        setLoading(false);
+        // setLoading(false);
       });
   }
 
@@ -56,7 +55,7 @@ export default function AppNavbar() {
   }
 
   function handleUploadImage() {
-    setLoading(true);
+    // setLoading(true);
     if(inputUpload.current?.files?.length) {
       const file = inputUpload.current?.files[0];
       const dataForm = new FormData();
@@ -67,7 +66,7 @@ export default function AppNavbar() {
         }
       }).then(() => {
         getUserDetails()
-        setLoading(false)
+        // setLoading(false)
       }).catch(error => console.log(error)), {
         pending: "Please Wait...",
         success: "Profile Changed Successful 🎉",
