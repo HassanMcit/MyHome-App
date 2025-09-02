@@ -135,7 +135,7 @@ export default function AppNavbar() {
                 color="default"
                 name=""
                 size="sm"
-                src={userDetails?.photo ? `https://linked-posts.routemisr.com${userDetails.photo}?t=${Date.now()}` : ''}
+                src={userDetails?.photo ? `${userDetails.photo}?cacheBust=${Date.now()}` : ''}
                 />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
