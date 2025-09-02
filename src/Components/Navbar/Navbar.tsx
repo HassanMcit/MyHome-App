@@ -10,11 +10,26 @@ import {
   NavbarItem,
 } from "@heroui/react";
 import { HuobiToken } from "iconsax-reactjs";
-import { useState } from "react";
-import { Link } from "react-router";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router";
+import { UserDataShared } from "../Context/UserContext/UserDataProvider";
 
 export default function AppNavbar() {
-  const [token] = useState(false);
+  
+  const userData = useContext(UserDataShared);
+  const router = useNavigate();
+  
+    if (!userData) {
+      throw new Error("hamsa sahdasdh");
+    }
+  
+    const {token, setToken} = userData;
+
+    function handleLogout() {
+      localStorage.clear();
+      setToken(localStorage.getItem('token'));
+      router('/login');
+    }
 
   return (
     <Navbar maxWidth="xl" className="bg-indigo-400 px-4 sm:px-6 lg:px-8">
@@ -26,19 +41,19 @@ export default function AppNavbar() {
       {token && (
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
           <NavbarItem>
-            <Link color="foreground" to="/">
+            <Link className="text-white" color="foreground" to="/">
               Tasks
             </Link>
           </NavbarItem>
           <NavbarItem isActive>
-            <Link aria-current="page" color="secondary" to="/expenses">
+            <Link className="text-white" aria-current="page" color="secondary" to="/expenses">
               Expenses
             </Link>
           </NavbarItem>
         </NavbarContent>
       )}
 
-      {token ? <NavbarContent as="div" justify="end">
+      {token && <NavbarContent as="div" justify="end">
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
             <Avatar
@@ -52,24 +67,22 @@ export default function AppNavbar() {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
+            <DropdownItem textValue="Signed in as" key="profile" className="h-14 gap-2">
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold">zoey@example.com</p>
             </DropdownItem>
-            <DropdownItem key="settings">My Settings</DropdownItem>
+            {/* <DropdownItem key="settings">My Settings</DropdownItem>
             <DropdownItem key="team_settings">Team Settings</DropdownItem>
             <DropdownItem key="analytics">Analytics</DropdownItem>
             <DropdownItem key="system">System</DropdownItem>
             <DropdownItem key="configurations">Configurations</DropdownItem>
-            <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-            <DropdownItem key="logout" color="danger">
+            <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem> */}
+            <DropdownItem key="logout" color="danger" onClick={handleLogout}>
               Log Out
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
-      </NavbarContent> : <Link color="foreground" to="/login" className="font-bold text-xl text-white">
-              Login
-            </Link>}
+      </NavbarContent>}
     </Navbar>
   );
 }

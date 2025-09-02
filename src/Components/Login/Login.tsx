@@ -1,16 +1,32 @@
 import { Button, Form, Input } from "@heroui/react";
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import bgImage from "../../assets/1W7A7574.jpg";
+import { useContext } from "react";
+import { UserDataShared } from "../Context/UserContext/UserDataProvider";
 
 type Inputs = {
   email: string;
   password: string;
 };
 
+type DataResolved = {
+  message: string,
+  token:string
+}
+
+
 export default function Login() {
+  const userData = useContext(UserDataShared);
+
+  if(!userData) {
+    throw new Error("UserDataShared must be used within UserDataProvider")
+  }
+
+  const {setToken} = userData;
+
   const {
     register,
     handleSubmit,
@@ -19,20 +35,27 @@ export default function Login() {
 
   const router = useNavigate();
 
-  async function sendUserLogin(value: Inputs) {
+   function sendUserLogin(value: Inputs) {
   toast.promise(
-    axios.post(`https://linked-posts.routemisr.com/users/signin`, value),
+    axios.post <DataResolved>(`https://linked-posts.routemisr.com/users/signin`, value)
+    .then(function(res: AxiosResponse<DataResolved>) {
+      localStorage.setItem('token', res?.data?.token);
+      setToken(res.data.token);
+      router('/');
+    }),
     {
       pending: "Please Wait...",
       success: {
-        render() {
-          // هنا axios بيرجع response → response.data
-          // console.log(); 
-          router('/');
+        render() {;
           return "Login Successful 🎉";
         },
       },
-      error: "Fail",
+      error: {
+        render({data}) {
+          const x = data as {response?:{data?:{error?:string}}}
+          return x.response?.data?.error;
+        }
+      },
     }
   );
 }
