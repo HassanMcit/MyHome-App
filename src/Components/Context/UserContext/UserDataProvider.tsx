@@ -1,4 +1,4 @@
-import { createContext, useState, type ReactNode } from "react";
+import { createContext, useState,} from "react";
 import type { TypeChildren, UserDataType } from "../../../Type";
 
 export const UserDataShared = createContext<UserDataType | null>(null);
