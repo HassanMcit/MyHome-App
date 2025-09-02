@@ -84,6 +84,12 @@ export default function AppNavbar() {
     getUserDetails();
   }, []);
 
+  useEffect(() => {
+  if (userDetails?.photo) {
+    console.log("Updated Photo URL:", userDetails.photo);
+  }
+}, [userDetails]);
+
 
   return (
     <>
@@ -129,7 +135,7 @@ export default function AppNavbar() {
                 color="default"
                 name=""
                 size="sm"
-                src={userDetails?.photo ? `${userDetails.photo}?t=${new Date().getTime()}` : ''}
+                src={userDetails?.photo ? `${userDetails.photo}?cacheBust=${Date.now()}` : ''}
                 />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
