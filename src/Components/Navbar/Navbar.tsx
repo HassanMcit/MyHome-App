@@ -16,12 +16,15 @@ import axios, { type AxiosResponse } from "axios";
 import type { Root, User } from "../../Type";
 import useUserDataWithRouter from "../CustomeHook/useUserDataWithRouter/useUserDataWithRouter";
 import { toast } from "react-toastify";
+import Loading from "../Loading/Loading";
 
 export default function AppNavbar() {
 
-  const [{ token, setToken }, router] = useUserDataWithRouter();
+  const [{ token, setToken, setLoading, loading }, router] = useUserDataWithRouter();
 
   const [userDetails, setUserDetails] = useState<User | null>(null);
+
+  const [updateProfileImage, setUpdateProfileImage] = useState<string | undefined>(userDetails?.photo);
 
   const inputUpload = useRef<null | HTMLInputElement>(null);
 
@@ -42,8 +45,8 @@ export default function AppNavbar() {
       })
       .then(function ({ data: { user } }: AxiosResponse<Root>) {
         setUserDetails(user);
-        // setLoading(false);
-        console.log(user)
+        setLoading(false);
+        setUpdateProfileImage(user.photo);
       });
   }
 
@@ -56,9 +59,9 @@ export default function AppNavbar() {
   }
 
   function handleUploadImage() {
-    // setLoading(true);
+    setLoading(true);
     if(inputUpload.current?.files?.length) {
-      const file = URL.createObjectURL(inputUpload.current?.files[0]);
+      const file = inputUpload.current?.files[0];
       const dataForm = new FormData();
       dataForm.append("photo", file);
       toast.promise(axios.put(`https://linked-posts.routemisr.com/users/upload-photo`, dataForm, {
@@ -67,7 +70,7 @@ export default function AppNavbar() {
         }
       }).then(() => {
         getUserDetails()
-        // setLoading(false)
+        setUpdateProfileImage(URL.createObjectURL(file))
       }).catch(error => console.log(error)), {
         pending: "Please Wait...",
         success: "Profile Changed Successful 🎉",
@@ -82,7 +85,7 @@ export default function AppNavbar() {
   return (
     <>
    
-    <Navbar maxWidth="xl" className="bg-indigo-400 px-4 sm:px-6 lg:px-8">
+    {loading ? <Loading/> : <Navbar maxWidth="xl" className="bg-indigo-400 px-4 sm:px-6 lg:px-8">
       <NavbarBrand className="cursor-pointer">
         <HuobiToken size="35" color="#FFF" />
         <p className="font-bold  text-white">HA Home</p>
@@ -126,7 +129,7 @@ export default function AppNavbar() {
                 color="default"
                 name=""
                 size="sm"
-                src={userDetails?.photo}
+                src={updateProfileImage}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
@@ -177,7 +180,7 @@ export default function AppNavbar() {
           </Dropdown>
         </NavbarContent>
       )}
-    </Navbar>
+    </Navbar>}
 
       
     </>
