@@ -68,11 +68,17 @@ export default function AppNavbar() {
         headers: {
           token
         }
-      }).then(() => {
+      }).then((res) => {
         getUserDetails()
+        return res
       }).catch(error => console.log(error)), {
         pending: "Please Wait...",
-        success: "Profile Changed Successful 🎉",
+        success: {
+          render({data}) {
+            return data?.data?.message;
+            
+          }
+        },
         error: "Please Try Again 😢"
       })
     }
