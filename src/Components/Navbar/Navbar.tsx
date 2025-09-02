@@ -47,7 +47,7 @@ export default function AppNavbar() {
         setUserDetails(user);
         setLoading(false);
         setUpdateProfileImage(user.photo);
-      });
+      }).finally(() => setLoading(false));
   }
 
     useEffect(() => {
@@ -70,8 +70,7 @@ export default function AppNavbar() {
         }
       }).then(() => {
         getUserDetails()
-        setUpdateProfileImage(URL.createObjectURL(file))
-      }).catch(error => console.log(error)).finally(() => setLoading(false)), {
+      }).catch(error => console.log(error)), {
         pending: "Please Wait...",
         success: "Profile Changed Successful 🎉",
         error: "Please Try Again 😢"
