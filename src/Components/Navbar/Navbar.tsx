@@ -129,7 +129,7 @@ export default function AppNavbar() {
                 color="default"
                 name=""
                 size="sm"
-                src={userDetails?.photo || ''}
+                src={userPhoto || ''}
                 />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
