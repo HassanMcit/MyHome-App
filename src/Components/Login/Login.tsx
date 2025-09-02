@@ -64,7 +64,7 @@ export default function Login() {
     <div
       className={`min-h-screen  flex items-center px-4 sm:px-6 lg:px-8 justify-center bg-cover bg-center lg:bg-top`}
       style={{
-        backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${bgImage})`,
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.5)), url(${bgImage})`,
       }}
     >
       <Form
