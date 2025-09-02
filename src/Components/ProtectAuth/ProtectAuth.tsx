@@ -1,22 +1,12 @@
-import { useContext, type ReactNode } from "react";
-import { UserDataShared } from "../Context/UserContext/UserDataProvider";
 import { Navigate } from "react-router";
+import type { TypeChildren } from "../../Type";
+import useUserDataWithRouter from "../CustomeHook/useUserDataWithRouter/useUserDataWithRouter";
 
-type ProtectedRouteProps = {
-  children: ReactNode;
-};
 
-export default function ProtectAuth({ children }: ProtectedRouteProps) {
-  const userData = useContext(UserDataShared);
+export default function ProtectAuth({ children }: TypeChildren) {
 
-  if (!userData) {
-    throw new Error("hamsa sahdasdh");
-  }
-
-  const {token} = userData;
-
-  console.log(token)
-
+  const [{token}] = useUserDataWithRouter();
+  
   if(!token) {
     return <div>{children}</div>;
   } else  {

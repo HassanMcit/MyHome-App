@@ -1,31 +1,15 @@
 import { Button, Form, Input } from "@heroui/react";
 import axios, { type AxiosResponse } from "axios";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import bgImage from "../../assets/1W7A7574.jpg";
-import { useContext } from "react";
-import { UserDataShared } from "../Context/UserContext/UserDataProvider";
-
-type Inputs = {
-  email: string;
-  password: string;
-};
-
-type DataResolved = {
-  message: string,
-  token:string
-}
+import type { DataResolved, Inputs } from "../../Type";
+import useUserDataWithRouter from "../CustomeHook/useUserDataWithRouter/useUserDataWithRouter";
 
 
 export default function Login() {
-  const userData = useContext(UserDataShared);
-
-  if(!userData) {
-    throw new Error("UserDataShared must be used within UserDataProvider")
-  }
-
-  const {setToken} = userData;
+  
+  const [{setToken, setLoading}, router] = useUserDataWithRouter();
 
   const {
     register,
@@ -33,14 +17,15 @@ export default function Login() {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const router = useNavigate();
 
    function sendUserLogin(value: Inputs) {
+    setLoading(true)
   toast.promise(
     axios.post <DataResolved>(`https://linked-posts.routemisr.com/users/signin`, value)
     .then(function(res: AxiosResponse<DataResolved>) {
       localStorage.setItem('token', res?.data?.token);
       setToken(res.data.token);
+      setLoading(false)
       router('/');
     }),
     {
