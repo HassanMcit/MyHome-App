@@ -81,7 +81,7 @@ export default function AppNavbar() {
 
   return (
     <>
-    {loading ? <Loading/> : 
+   
     <Navbar maxWidth="xl" className="bg-indigo-400 px-4 sm:px-6 lg:px-8">
       <NavbarBrand className="cursor-pointer">
         <HuobiToken size="35" color="#FFF" />
@@ -177,7 +177,7 @@ export default function AppNavbar() {
           </Dropdown>
         </NavbarContent>
       )}
-    </Navbar>}
+    </Navbar>
 
       
     </>
