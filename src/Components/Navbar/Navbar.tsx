@@ -86,7 +86,7 @@ export default function AppNavbar() {
     <>
    
     {loading ? <Loading/> : <Navbar maxWidth="xl" className="bg-indigo-400 px-4 sm:px-6 lg:px-8">
-      <NavbarBrand className="cursor-pointer">
+      <NavbarBrand as={Link} to='/' className="cursor-pointer">
         <HuobiToken size="35" color="#FFF" />
         <p className="font-bold  text-white">HA Home</p>
       </NavbarBrand>
