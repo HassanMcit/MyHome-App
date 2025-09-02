@@ -43,6 +43,7 @@ export default function AppNavbar() {
       .then(function ({ data: { user } }: AxiosResponse<Root>) {
         setUserDetails(user);
         // setLoading(false);
+        console.log(user)
       });
   }
 
@@ -57,7 +58,7 @@ export default function AppNavbar() {
   function handleUploadImage() {
     // setLoading(true);
     if(inputUpload.current?.files?.length) {
-      const file = inputUpload.current?.files[0];
+      const file = URL.createObjectURL(inputUpload.current?.files[0]);
       const dataForm = new FormData();
       dataForm.append("photo", file);
       toast.promise(axios.put(`https://linked-posts.routemisr.com/users/upload-photo`, dataForm, {
