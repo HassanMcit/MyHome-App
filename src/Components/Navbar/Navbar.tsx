@@ -25,7 +25,7 @@ export default function AppNavbar() {
   const location = useLocation();
 
   const [userDetails, setUserDetails] = useState<User | null>(null);
-  const [userPhoto, setUserPhoto] = useState<string | null>(null);
+  // const [userPhoto, setUserPhoto] = useState<string | null>(null);
 
   const inputUpload = useRef<HTMLInputElement | null >(null);
   
@@ -44,7 +44,7 @@ export default function AppNavbar() {
         }
       }).then(response => {
         setUserDetails(response.data.user)
-        setUserPhoto(`${response.data.user.photo}`);
+        // setUserPhoto(`${response.data.user.photo}`);
         console.log('Updated photo URL:', response.data.user.photo);
         console.log("User Data:", response.data);
         return response?.data;
@@ -63,7 +63,7 @@ export default function AppNavbar() {
   function handleImageUpload() {
   if (inputUpload?.current?.files?.length) {
     const file = inputUpload.current.files[0];
-    setUserPhoto(URL.createObjectURL(file)); // مؤقت لعرض الصورة
+    // setUserPhoto(URL.createObjectURL(file)); // مؤقت لعرض الصورة
 
     const dataForm = new FormData();
     dataForm.append("photo", file);
@@ -129,7 +129,7 @@ export default function AppNavbar() {
                 color="default"
                 name=""
                 size="sm"
-                src={userPhoto || ''}
+                src={userDetails?.photo || ''}
                 />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
