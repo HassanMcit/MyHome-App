@@ -47,6 +47,10 @@ export default function AppNavbar() {
       });
   }
 
+    useEffect(() => {
+    getUserDetails();
+  }, []);
+
   function handleOpenFile() {
     inputUpload.current?.click();
   }
@@ -69,9 +73,7 @@ export default function AppNavbar() {
     }
   }
 
-  useEffect(() => {
-    getUserDetails();
-  }, []);
+
 
 
   return (

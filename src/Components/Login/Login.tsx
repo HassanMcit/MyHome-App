@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import bgImage from "../../assets/1W7A7574.jpg";
 import type { DataResolved, Inputs } from "../../Type";
 import useUserDataWithRouter from "../CustomeHook/useUserDataWithRouter/useUserDataWithRouter";
+import { useEffect } from "react";
 
 
 export default function Login() {
@@ -44,6 +45,10 @@ export default function Login() {
     }
   );
 }
+
+useEffect(() => {
+  setLoading(false)
+}, [])
 
   return (
     <div
