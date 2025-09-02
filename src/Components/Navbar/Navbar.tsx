@@ -10,25 +10,23 @@ import {
   NavbarItem,
 } from "@heroui/react";
 import { HuobiToken } from "iconsax-reactjs";
-import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
-import axios, { type AxiosResponse } from "axios";
-import type { Root, User } from "../../Type";
 import useUserDataWithRouter from "../CustomeHook/useUserDataWithRouter/useUserDataWithRouter";
-import { toast } from "react-toastify";
 import Loading from "../Loading/Loading";
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import type { Root, User } from "../../Type";
+import { toast } from "react-toastify";
 
 export default function AppNavbar() {
 
   const [{ token, setToken, setLoading, loading }, router] = useUserDataWithRouter();
 
+  const location = useLocation();
+
   const [userDetails, setUserDetails] = useState<User | null>(null);
 
-  const [updateProfileImage, setUpdateProfileImage] = useState<string | undefined>(userDetails?.photo);
-
-  const inputUpload = useRef<null | HTMLInputElement>(null);
-
-  const location = useLocation();
+  const inputUpload = useRef<HTMLInputElement | null >(null);
   
   function handleLogout() {
     localStorage.clear();
@@ -36,55 +34,48 @@ export default function AppNavbar() {
     router("/login");
   }
 
-  function getUserDetails() {
-    axios
-      .get<Root>(`https://linked-posts.routemisr.com/users/profile-data`, {
-        headers: {
-          token,
-        },
-      })
-      .then(function ({ data: { user } }: AxiosResponse<Root>) {
-        setUserDetails(user);
-        setLoading(false);
-        setUpdateProfileImage(user.photo);
-      }).finally(() => setLoading(false));
-  }
-
-    useEffect(() => {
-    getUserDetails();
-  }, []);
-
-  function handleOpenFile() {
-    inputUpload.current?.click();
-  }
-
-  function handleUploadImage() {
-    setLoading(true);
-    if(inputUpload.current?.files?.length) {
-      const file = inputUpload.current?.files[0];
-      const dataForm = new FormData();
-      dataForm.append("photo", file);
-      toast.promise(axios.put(`https://linked-posts.routemisr.com/users/upload-photo`, dataForm, {
+   function getUserDetails() {
+    setLoading(true)
+    toast.promise( 
+      axios.get<Root>(`https://linked-posts.routemisr.com/users/profile-data`, {
         headers: {
           token
         }
-      }).then((res) => {
-        getUserDetails()
-        return res
-      }).catch(error => console.log(error)), {
+      }).then(response => {
+        setUserDetails(response?.data?.user);
+        console.log('hehrehjrgehr')
+        return response?.data;
+      }).finally(() => setLoading(false)), {
         pending: "Please Wait...",
         success: {
           render({data}) {
-            return data?.data?.message;
-            
+            return data.message;
           }
         },
-        error: "Please Try Again 😢"
+        error: "Failed to fetch user data 😢"
       })
-    }
   }
 
 
+  function handleImageUpload() {
+    setLoading(true);
+    if(inputUpload?.current?.files?.length) {
+      const file  = inputUpload?.current?.files[0];
+      const dataForm = new FormData();
+      dataForm.append('photo', file);
+      axios.put(`https://linked-posts.routemisr.com/users/upload-photo`,dataForm, {
+        headers: {
+          token
+        }
+      }).then(() => getUserDetails())
+    }
+  }
+
+  
+
+  useEffect(() => {
+    getUserDetails();
+  }, []);
 
 
   return (
@@ -96,12 +87,9 @@ export default function AppNavbar() {
         <p className="font-bold  text-white">HA Home</p>
       </NavbarBrand>
 
-      <input
-        type="file"
-        ref={inputUpload}
-        className="hidden"
-        onChange={handleUploadImage}
-      />
+
+      <input type="file" onChange={handleImageUpload} hidden ref={inputUpload}/>
+
 
       {token && (
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
@@ -134,29 +122,29 @@ export default function AppNavbar() {
                 color="default"
                 name=""
                 size="sm"
-                src={updateProfileImage}
+                src={`${userDetails?.photo}`}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownItem
-                textValue={`Name: ${userDetails?.name || ""}, Email: ${
-                  userDetails?.email || ""
-                }`}
+                textValue={`Name: ""}, Email:`}
+                  // userDetails?.email || ""
+                // }`}
                 key="profile"
                 className="h-14 gap-2"
               >
                 <p className="font-semibold">
-                  <span className="font-bold">Name:</span> {userDetails?.name}
+                  <span className="font-bold">Name:</span> {userDetails?.name} 
                 </p>
                 <p className="font-semibold">
-                  <span className="font-bold">Email:</span> {userDetails?.email}
+                  <span className="font-bold">Email: {userDetails?.email} </span> 
                 </p>
               </DropdownItem>
 
               <DropdownItem
                 key="profileImage"
                 textValue="Change Profile Image"
-                onClick={handleOpenFile}
+                onClick={()=> inputUpload.current?.click()}
               >
                 Change Profile Image
               </DropdownItem>
