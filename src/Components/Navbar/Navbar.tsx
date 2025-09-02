@@ -43,7 +43,7 @@ export default function AppNavbar() {
           token
         }
       }).then(response => {
-        setUserPhoto(response.data.user.photo);
+        setUserDetails(response.data.user)
         setUserPhoto(`${response.data.user.photo}?t=${Date.now()}`);
         return response?.data;
       }).finally(() => setLoading(false)), {
