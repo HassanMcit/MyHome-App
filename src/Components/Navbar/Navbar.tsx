@@ -129,7 +129,7 @@ export default function AppNavbar() {
                 color="default"
                 name=""
                 size="sm"
-                src={userDetails?.photo || ''}
+                src={userDetails?.photo ? `${userDetails.photo}?t=${new Date().getTime()}` : ''}
                 />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">
